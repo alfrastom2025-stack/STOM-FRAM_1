@@ -216,7 +216,7 @@ body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--
   <div class="sb-logo">
     <div class="sb-logo-icon">A</div>
     <div class="sb-logo-text">
-      <div class="uni">ANDIJAN FARMATSIYA UNIVERSITETI</div>
+      <div class="uni">ALFRAGANUS UNIVERSITETI</div>
       <div class="nm">AFU Dekanat</div>
     </div>
   </div>
@@ -916,6 +916,7 @@ body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--
 
 <div id="toast"></div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
 <script src="db.js"></script>
 <script src="vedmost1kurs.js"></script>
 <script>
@@ -2892,7 +2893,7 @@ async function sendAI(){
   try{
     const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1000,
-        messages:[{role:'user',content:`Siz AFU (Andijan Farmatsevtika Universiteti) Dekanat platformasining AI yordamchisisiz. O'zbek tilida qisqa javob bering.\nStatistika: jami=${s.jami} talaba, faol=${s.faol}, guruhlar=${s.grJami}, ruxsat=${s.ruxsat}\nSavol: ${msg}`}]})});
+        messages:[{role:'user',content:`Siz AFU (Alfraganus Universiteti) Dekanat platformasining AI yordamchisisiz. O'zbek tilida qisqa javob bering.\nStatistika: jami=${s.jami} talaba, faol=${s.faol}, guruhlar=${s.grJami}, ruxsat=${s.ruxsat}\nSavol: ${msg}`}]})});
     const data=await res.json();
     const txt=data.content?.[0]?.text||'Javob ololmadim.';
     msgs.innerHTML+=`<div style="background:var(--primary-light);border-radius:8px;padding:12px;font-size:13px;max-width:80%">${txt}</div>`;
