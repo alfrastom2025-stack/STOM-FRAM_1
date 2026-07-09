@@ -3042,5 +3042,75 @@ function loadVed1Kurs(){
 
 // VEDMOST_1KURS_B64 endi vedmost1kurs.js faylida
 </script>
+  <!-- Supabase kutubxonasini ulash -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+// 1. Supabase ulanish sozlamalari
+const SUPABASE_URL = "https://vdxnbwlbbiqbzjodpjjp.supabase.co"; 
+// DIQQAT: Pastdagi qo'shtirnoq ichiga boya o'zingiz nusxalagan uzun API kalitni qo'ying!
+const SUPABASE_ANON_KEY = "sb_publishable_4KgZYO6ULf2lbDwClP3pzQ_rjCrNAqF"; 
+
+const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// 2. Limitdan himoyalangan ma'lumot yuklash funksiyasi
+async function yuklashTalabalar(fakultetNomi) {
+    const cacheKey = `talaba_kesh_${fakultetNomi}`;
+    const cacheTimeKey = `${cacheKey}_vaqt`;
+    const keshMuddati = 3 * 60 * 1000; // 3 daqiqa keshda turadi
+
+    const keshlanganMaulmot = localStorage.getItem(cacheKey);
+    const keshVaqti = localStorage.getItem(cacheTimeKey);
+    const hozir = Date.now();
+
+    if (keshlanganMaulmot && keshVaqti && (hozir - keshVaqti < keshMuddati)) {
+        console.log("Keshdan o'qildi:", fakultetNomi);
+        ekrangaChikar(JSON.parse(keshlanganMaulmot));
+        return;
+    }
+
+    try {
+        // .range(0, 29) orqali faqat 30 ta qator olinadi va limit tejaladi
+        const { data, error } = await supabase
+            .from('talabalar')
+            .select('ism_sharif, guruh, kurs, fan_nomi, davomat_foizi')
+            .eq('fakultet', ...[fakultetNomi])
+            .range(0, 29); 
+
+        if (error) throw error;
+
+        localStorage.setItem(cacheKey, JSON.stringify(data));
+        localStorage.setItem(cacheTimeKey, hozir.toString());
+
+        ekrangaChikar(data);
+
+    } catch (err) {
+        console.error("Xatolik:", err.message);
+        if (keshlanganMaulmot) ekrangaChikar(JSON.parse(keshlanganMaulmot));
+    }
+}
+
+// 3. Ma'lumotni jadvalga joylash
+function ekrangaChikar(talabalarRo'yxati) {
+    // Saytingizdagi jadval tanasi (tbody) ID-si. Agar id boshqa bo'lsa, uni to'g'rilang
+    const tableBody = document.getElementById('table-body-id'); 
+    if(!tableBody) return;
+
+    tableBody.innerHTML = ''; 
+
+    talabalarRo'yxati.forEach(talaba => {
+        const row = `
+            <tr>
+                <td>${talaba.ism_sharif}</td>
+                <td>${talaba.guruh}</td>
+                <td>${talaba.kurs}-kurs</td>
+                <td>${talaba.fan_nomi || '-'}</td>
+                <td>${talaba.davomat_foizi}%</td>
+            </tr>
+        `;
+        tableBody.innerHTML += row;
+    });
+}
+</script>
 </body>
 </html>
