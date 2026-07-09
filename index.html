@@ -3110,7 +3110,10 @@ function ekrangaChikar(talabalarRo'yxati) {
         tableBody.innerHTML += row;
     });
 }
-  yuklashTalabalar('Stomatologiya');
+ // Jadval sahifada mavjud bo'lsagina talabalarni avtomatik yuklaydi
+if (document.getElementById('fak-yo-tbody')) {
+    yuklashTalabalar('Stomatologiya');
+}
 </script>
 </body>
 </html>
