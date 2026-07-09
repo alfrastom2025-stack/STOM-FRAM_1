@@ -3093,9 +3093,8 @@ async function yuklashTalabalar(fakultetNomi) {
 // 3. Ma'lumotni jadvalga joylash
 function ekrangaChikar(talabalarRo'yxati) {
     // Saytingizdagi jadval tanasi (tbody) ID-si. Agar id boshqa bo'lsa, uni to'g'rilang
-    const tableBody = document.getElementById('table-body-id'); 
-    if(!tableBody) return;
-
+   let tableBody = document.getElementById('table-body-id') || document.querySelector('tbody') || document.querySelector('table');
+    if (!tableBody) return;
     tableBody.innerHTML = ''; 
 
     talabalarRo'yxati.forEach(talaba => {
