@@ -3093,7 +3093,7 @@ async function yuklashTalabalar(fakultetNomi) {
 // 3. Ma'lumotni jadvalga joylash
 function ekrangaChikar(talabalarRo'yxati) {
     // Saytingizdagi jadval tanasi (tbody) ID-si. Agar id boshqa bo'lsa, uni to'g'rilang
-   let tableBody = document.getElementById('table-body-id') || document.querySelector('tbody') || document.querySelector('table');
+   const tableBody = document.getElementById('fak-yo-tbody');
     if (!tableBody) return;
     tableBody.innerHTML = ''; 
 
@@ -3110,6 +3110,7 @@ function ekrangaChikar(talabalarRo'yxati) {
         tableBody.innerHTML += row;
     });
 }
+  yuklashTalabalar('Stomatologiya');
 </script>
 </body>
 </html>
