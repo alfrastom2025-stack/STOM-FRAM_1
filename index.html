@@ -2911,12 +2911,9 @@ function syncGS(){showToast('Sinxronlanmoqda...');}
     } catch (err) {
         console.error(err);
     }
-}
-        msgs.innerHTML += `<div style="background:var(--primary-light);border-radius:8px;padding:12px;font-size:13px;max-width:80%">${txt}</div>`;
-    } catch (err) {
-        msgs.innerHTML += `<div style="background:#fee2e2;border-radius:8px;padding:12px;font-size:13px;max-width:80%;color:var(--red)">Xato. Internet ulanishini tekshiring.</div>`;
+} catch (err) {
+        console.error(err);
     }
-    msgs.scrollTop = msgs.scrollHeight;
 }
 function fillAllSelects(){ fillSelects(); fillDav2Gr(); fillBoshqaruvSels(); }
 function closeM(id){document.getElementById(id).classList.remove('show');}
