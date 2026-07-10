@@ -2891,7 +2891,7 @@ function syncGS(){showToast('Sinxronlanmoqda...');}
     msgs.scrollTop = msgs.scrollHeight;
 
     try {
-        const res = await fetch('https://cors-anywhere.herokuapp.com/https://openrouter.ai/api/v1/chat/completions', {
+        const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
             method: 'POST',
             headers: { 
                 'Content-Type': 'application/json',
