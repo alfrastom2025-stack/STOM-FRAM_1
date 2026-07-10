@@ -2882,7 +2882,7 @@ function saveGsUrl(){localStorage.setItem('gs_url',document.getElementById('gs-u
 function syncGS(){showToast('Sinxronlanmoqda...');}
 
 // ═══════════ AI ═══════════
-async function sendAI(){
+ async function sendAI(){
     const inp=document.getElementById('ai-inp');
     const msg=inp.value.trim();if(!msg)return;
     inp.value='';
@@ -2891,11 +2891,12 @@ async function sendAI(){
     msgs.scrollTop=msgs.scrollHeight;
     
     try {
-        const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+        const res = await fetch('https://cors-anywhere.herokuapp.com/https://openrouter.ai/api/v1/chat/completions', {
             method: 'POST',
             headers: { 
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer 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'
+                'Authorization': 'Bearer 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',
+                'X-Requested-With': 'XMLHttpRequest'
             },
             body: JSON.stringify({
                 model: 'google/gemini-2.5-flash',
@@ -2906,6 +2907,13 @@ async function sendAI(){
         let txt = 'Javob ololmadim.';
         if (data && data.choices && data.choices[0] && data.choices[0].message) {
             txt = data.choices[0].message.content;
+        }
+        msgs.innerHTML += `<div style="background:var(--primary-light);border-radius:8px;padding:12px;font-size:13px;max-width:80%">${txt}</div>`;
+    } catch (err) {
+        msgs.innerHTML += `<div style="background:#fee2e2;border-radius:8px;padding:12px;font-size:13px;max-width:80%;color:var(--red)">Xato. Internet ulanishini tekshiring.</div>`;
+    }
+    msgs.scrollTop = msgs.scrollHeight;
+}
         }
         msgs.innerHTML += `<div style="background:var(--primary-light);border-radius:8px;padding:12px;font-size:13px;max-width:80%">${txt}</div>`;
     } catch (err) {
