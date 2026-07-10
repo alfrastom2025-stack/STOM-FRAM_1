@@ -2892,16 +2892,6 @@ async function sendAI(){
   msgs.scrollTop=msgs.scrollHeight;
   const s=stats();
   try{
-   // Bepul va brauzerda taqiqlanmagan Gemini API orqali so'rov yuborish
-        const res = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyD_EXAMPLE_KEY_O_Z_API_KALITINGIZNI_QO_YING', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                contents: [{ parts: [{ text: "Siz AFU (Alfraganus Universiteti) Dekanat platformasining AI yordamchisiz. O'zbek tilida qisqa javob bering. Savol: " + msgs.value }] }]
-            })
-        });
-        const data = await res.json();
-        const txt = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Javob ololmadim.';
     msgs.innerHTML+=`<div style="background:var(--primary-light);border-radius:8px;padding:12px;font-size:13px;max-width:80%">${txt}</div>`;
   }catch{
     msgs.innerHTML+=`<div style="background:#fee2e2;border-radius:8px;padding:12px;font-size:13px;max-width:80%;color:var(--red)">Xato. Internet ulanishini tekshiring.</div>`;
