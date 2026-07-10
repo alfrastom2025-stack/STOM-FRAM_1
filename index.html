@@ -2,7 +2,7 @@
 <html lang="uz">
 <head>
 <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AFU Dekanat Platformasi</title>
 <style>
 :root {
@@ -216,7 +216,7 @@ body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--
   <div class="sb-logo">
     <div class="sb-logo-icon">A</div>
     <div class="sb-logo-text">
-      <div class="uni">ALFRAGANUS UNIVERSITETI</div>
+      <div class="uni">ANDIJAN FARMATSIYA UNIVERSITETI</div>
       <div class="nm">AFU Dekanat</div>
     </div>
   </div>
@@ -916,7 +916,6 @@ body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--
 
 <div id="toast"></div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
 <script src="db.js"></script>
 <script src="vedmost1kurs.js"></script>
 <script>
@@ -2882,39 +2881,28 @@ function saveGsUrl(){localStorage.setItem('gs_url',document.getElementById('gs-u
 function syncGS(){showToast('Sinxronlanmoqda...');}
 
 // ═══════════ AI ═══════════
- async function sendAI(){
-    const inp = document.getElementById('ai-inp');
-    const msg = inp.value.trim(); if(!msg) return;
-    inp.value = '';
-    const msgs = document.getElementById('ai-msgs');
-    msgs.innerHTML += `<div style="align-self:flex-end;background:var(--primary);color:#fff;border-radius:8px;padding:10px 14px;font-size:13px;max-width:80%">${msg}</div>`;
-    msgs.scrollTop = msgs.scrollHeight;
-
-    try {
-        const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-            method: 'POST',
-            headers: { 
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer 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',              
-            },
-            body: JSON.stringify({
-                model: 'google/gemini-2.5-flash',
-                messages: [{ role: 'user', content: "Siz AFU (Alfraganus Universiteti) Dekanat platformasining AI yordamchisiz. O'zbek tilida juda qisqa va aniq javob bering. Savol: " + msg }]
-            })
-        });
-        const data = await res.json();
-        let txt = 'Javob ololmadim.';
-        if (data && data.choices && data.choices[0] && data.choices[0].message) {
-            txt = data.choices[0].message.content;
-        }
-        msgs.innerHTML += `<div style="background:var(--primary-light);border-radius:8px;padding:12px;font-size:13px;max-width:80%">${txt}</div>`;
-    } catch (err) {
-        console.error(err);
-    }
-} catch (err) {
-        console.error(err);
-    }
+async function sendAI(){
+  const inp=document.getElementById('ai-inp');
+  const msg=inp.value.trim();if(!msg)return;
+  inp.value='';
+  const msgs=document.getElementById('ai-msgs');
+  msgs.innerHTML+=`<div style="align-self:flex-end;background:var(--primary);color:#fff;border-radius:8px;padding:10px 14px;font-size:13px;max-width:80%">${msg}</div>`;
+  msgs.scrollTop=msgs.scrollHeight;
+  const s=stats();
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1000,
+        messages:[{role:'user',content:`Siz AFU (Andijan Farmatsevtika Universiteti) Dekanat platformasining AI yordamchisisiz. O'zbek tilida qisqa javob bering.\nStatistika: jami=${s.jami} talaba, faol=${s.faol}, guruhlar=${s.grJami}, ruxsat=${s.ruxsat}\nSavol: ${msg}`}]})});
+    const data=await res.json();
+    const txt=data.content?.[0]?.text||'Javob ololmadim.';
+    msgs.innerHTML+=`<div style="background:var(--primary-light);border-radius:8px;padding:12px;font-size:13px;max-width:80%">${txt}</div>`;
+  }catch{
+    msgs.innerHTML+=`<div style="background:#fee2e2;border-radius:8px;padding:12px;font-size:13px;max-width:80%;color:var(--red)">Xato. Internet ulanishini tekshiring.</div>`;
+  }
+  msgs.scrollTop=msgs.scrollHeight;
 }
+
+// ═══════════ HELPERS ═══════════
 function fillAllSelects(){ fillSelects(); fillDav2Gr(); fillBoshqaruvSels(); }
 function closeM(id){document.getElementById(id).classList.remove('show');}
 document.querySelectorAll('.modal-bg').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('show');}));
@@ -3052,79 +3040,6 @@ function loadVed1Kurs(){
 }
 
 // VEDMOST_1KURS_B64 endi vedmost1kurs.js faylida
-</script>
-  <!-- Supabase kutubxonasini ulash -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<script>
-// 1. Supabase ulanish sozlamalari
-const SUPABASE_URL = "https://vdxnbwlbbiqbzjodpjjp.supabase.co"; 
-// DIQQAT: Pastdagi qo'shtirnoq ichiga boya o'zingiz nusxalagan uzun API kalitni qo'ying!
-const SUPABASE_ANON_KEY = "sb_publishable_4KgZYO6ULf2lbDwClP3pzQ_rjCrNAqF"; 
-
-const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-// 2. Limitdan himoyalangan ma'lumot yuklash funksiyasi
-async function yuklashTalabalar(fakultetNomi) {
-    const cacheKey = `talaba_kesh_${fakultetNomi}`;
-    const cacheTimeKey = `${cacheKey}_vaqt`;
-    const keshMuddati = 3 * 60 * 1000; // 3 daqiqa keshda turadi
-
-    const keshlanganMaulmot = localStorage.getItem(cacheKey);
-    const keshVaqti = localStorage.getItem(cacheTimeKey);
-    const hozir = Date.now();
-
-    if (keshlanganMaulmot && keshVaqti && (hozir - keshVaqti < keshMuddati)) {
-        console.log("Keshdan o'qildi:", fakultetNomi);
-        ekrangaChikar(JSON.parse(keshlanganMaulmot));
-        return;
-    }
-
-    try {
-        // .range(0, 29) orqali faqat 30 ta qator olinadi va limit tejaladi
-        const { data, error } = await supabase
-            .from('talabalar')
-            .select('ism_sharif, guruh, kurs, fan_nomi, davomat_foizi')
-            .eq('fakultet', ...[fakultetNomi])
-            .range(0, 29); 
-
-        if (error) throw error;
-
-        localStorage.setItem(cacheKey, JSON.stringify(data));
-        localStorage.setItem(cacheTimeKey, hozir.toString());
-
-        ekrangaChikar(data);
-
-    } catch (err) {
-        console.error("Xatolik:", err.message);
-        if (keshlanganMaulmot) ekrangaChikar(JSON.parse(keshlanganMaulmot));
-    }
-}
-
-// 3. Ma'lumotni jadvalga joylash
-function ekrangaChikar(talabalarRo'yxati) {
-    // Saytingizdagi jadval tanasi (tbody) ID-si. Agar id boshqa bo'lsa, uni to'g'rilang
-   const tableBody = document.getElementById('fak-yo-tbody');
-    if (!tableBody) return;
-    tableBody.innerHTML = ''; 
-
-    talabalarRo'yxati.forEach(talaba => {
-        const row = `
-            <tr>
-                <td>${talaba.ism_sharif}</td>
-                <td>${talaba.guruh}</td>
-                <td>${talaba.kurs}-kurs</td>
-                <td>${talaba.fan_nomi || '-'}</td>
-                <td>${talaba.davomat_foizi}%</td>
-            </tr>
-        `;
-        tableBody.innerHTML += row;
-    });
-}
- // Jadval sahifada mavjud bo'lsagina talabalarni avtomatik yuklaydi
-if (document.getElementById('fak-yo-tbody')) {
-    yuklashTalabalar('Stomatologiya');
-}
 </script>
 </body>
 </html>
