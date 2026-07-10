@@ -1,1 +1,0 @@
-// 1-kurs vedmostlari va talabalar ro'yxati funksiyalari
