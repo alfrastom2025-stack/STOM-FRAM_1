@@ -1,1 +1,0 @@
-// Database konfiguratsiyasi va ma'lumotlar
