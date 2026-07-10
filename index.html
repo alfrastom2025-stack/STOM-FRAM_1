@@ -48,6 +48,14 @@ body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--
 .sb-ui .name { font-size:12px; font-weight:700; }
 .sb-ui .role { font-size:11px; color:var(--muted); }
 
+#sidebar.collapsed {
+  left: calc(var(--sw) * -1) !important;
+}
+#sidebar.collapsed + #main {
+  margin-left: 0 !important;
+  width: 100% !important;
+}
+
 /* HEADER */
 #header { position:fixed; left:var(--sw); right:0; top:0; height:var(--hh); background:#fff; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; padding:0 24px; z-index:90; }
 .hdr-left { display:flex; align-items:center; gap:6px; font-size:13px; color:var(--muted); }
