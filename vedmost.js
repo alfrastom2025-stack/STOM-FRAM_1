@@ -1,6 +1,75 @@
-// AFU Dekanat — 1-kurs vedmost ilovasi (base64, iframe srcdoc uchun)
-// Bu fayl VEDMOST_1KURS_B64 globalini beradi. index.html'dan OLDIN yuklanadi.
+// Google Sheets konfiguratsiyasi
+// Diqqat: O'ziningizning Google Sheet ID va API Key ma'lumotlaringizni kiriting!
+const SHEET_ID = 'JADVALINGIZNING_UZUN_ID_KODI'; 
+const API_KEY = 'SIZNING_GOOGLE_API_KALITINGIZ';
+// D11 dan M36 gacha bo'lgan talabalar hududini o'qiymiz
+const RANGE = 'Sheet1!D11:M37'; 
 
-const VEDMOST_1KURS_B64 = "PCFET0NUWVBFIGh0bWw+CjxodG1sIGxhbmc9InV6Ij4KPGhlYWQ+CjxtZXRhIGNoYXJzZXQ9IlVURi04Ij4KPG1ldGEgbmFtZT0idmlld3BvcnQiIGNvbnRlbnQ9IndpZHRoPWRldmljZS13aWR0aCxpbml0aWFsLXNjYWxlPTEiPgo8dGl0bGU+VmVkbW9zdCBwbGF0Zm9ybWFzaSDigJQgQWxmcmFnYW51cyAyMDI1LTIwMjY8L3RpdGxlPgo8c3R5bGU+Cip7Ym94LXNpemluZzpib3JkZXItYm94O21hcmdpbjowO3BhZGRpbmc6MH0KOnJvb3R7CiAgLS1iZzojRjdGNkYzOy0tY2FyZDojZmZmOy0tdHh0OiMxRjFFMUI7LS1tdXQ6IzZCNkE2NDstLWJkOiNFMkUwREE7LS1iZDI6I0NGQ0RDNTsKICAtLWdybjojM0I2RDExOy0tZ3JuLWJnOiNFQUYzREU7LS1ibHU6IzE4NUZBNTstLWJsdS1iZzojRTZGMUZCOwogIC0tYW1iOiM4NTRGMEI7LS1hbWItYmc6I0ZBRUVEQTstLXJlZDojQTMyRDJEOy0tcmVkLWJnOiNGQ0VCRUI7CiAgLS1oZHItYmc6I0ZGRjZFMDstLWhkci10OiM3QTVBMTA7LS1yYWQ6MTBweDstLXN3OjI1OHB4Cn0KYm9keXpmb250LWZhbWlseTonU2Vnb2UgVUknLHN5c3RlbS11aSxzYW5zLXNlcmlmO2JhY2tncm91bmQ6dmFyKC0tYmcpO2NvbG9yOnZhcigtLXR4dCk7Zm9udC1zaXplOjEzcHg7Rpc3BsYXk6ZmxleDtoZWlnaHQ6MTAwdmg7b3ZlcmZsb3c6aGlkZGVufQouc2lkZWJhcnt3aWR0aDp2YXIoLS1zdyk7bWluLXdpZHRoOnZhcigtLXN3KTtiYWNrZ3JvdW5kOnZhcigtLWNhcmQpO2JvcmRlci1yaWdodDoxcHggc29saWQgdmFyKC0tYmQpO2Rpc3BsYXk6ZmxleDtmbGV4LWRpcmVjdGlvbjpjb2x1bW47b3ZlcmZsb3c6aGlkZGVufQouc2ItaGVhZHtwYWRkaW5nOjEycHggMTRweDtib3JkZXItYm90dG9tOjFweCBzb2xpZCB2YXIoLS1iZCk7ZmxleC1zaHJpbms6MH0KLnNiLWhlYWQgaDF7Zm9udC1zaXplOjE0cHg7Zm9udC13ZWlnaHQ6NzAwfQouc2ItaGVhZCAuc3Vie2ZvbnQtc2l6ZToxMHB4O2NvbG9yOnZhcigtLW11dCk7bWFyZ2luLXRvcDoycHh9Ci5zYi1maWx0ZXJ7cGFkZGluZzo4cHggMTBweDtib3JkZXItYm90dG9tOjFweCBzb2xpZCB2YXIoLS1iZCk7Ym9yZGVyLXRvcDoxcHggc29saWQgdmFyKC0tYmQpfQouZmwtYnRuc3tkaXNwbGF5OmZsZXg7Z2FwOjRweH0KLmZsLWJ0bntmbGV4OjE7cGFkZGluZzo1cHggNnB4O2ZvbnQtc2l6ZToxMXB4O2JvcmRlcjoxcHggc29saWQgdmFyKC0tYmQyKTtiYWNrZ3JvdW5kOnZhcigtLWJnKTtjb2xvcjp2YXIoLS1tdXQpO2JvcmRlci1yYWRpdXM6NnB4O2N1cnNvcjpwb2ludGVyO3RyYW5zaXRpb246YWxsIC4Fcztmb250LWZhbWlseTppbmhlcml0fQouZmwtYnRuLmFjdHtiYWNrZ3JvdW5kOnZhcigtLWJsdSk7Y29sb3I6I2ZmZjtib3JkZXItY29sb3I6dmFyKC0tYmx1KTtmb250LXdlaWdodDo2MDB9Ci5zYi1pdGVte3BhZGRpbmc6OHB4IDE0cHggOHB4IDEycHg7Y3Vyc29yOnBvaW50ZXI7Zm9udC1zaXplOjEycHg7Ym9yZGVyLWJvdHRvbToxcHggc29saWQgdmFyKC0tYmQpO2xpbmUtaGVpZ2h0OjEuMztkaXNwbGF5OmZsZXg7anVzdGlmeS1jb250ZW50OnNwYWNlLWJldHdlZW47YWxpZ24taXRlbXM6Y2VudGVyfQouc2ItaXRlbS5hY3R7YmFja2dyb3VuZDp2YXIoLS1ibHUtYmcpO2NvbG9yOnZhcigtLWJsdSk7Zm9udC13ZWlnaHQ6NjAwO2JvcmRlci1sZWZ0OjNweCBzb2xpZCB2YXIoLS1ibHUpfQouc2Itc2Nyb2xse292ZXJmbG93LXk6YXV0bztmbGV4OjF9Ci5tYWlue2ZsZXg6MTtkaXNwbGF5OmZsZXg7ZmxleC1kaXJlY3Rpb246Y29sdW1uO292ZXJmbG93OmhpZGRlbn9FLnRvcGJhcntiYWNrZ3JvdW5kOnZhcigtLWNhcmQpO2JvcmRlci1ib3R0b206MXB4IHNvbGlkIHZhcigtLWJkKTtwYWRkaW5nOjlweCAxNnB4O2Rpc3BsYXk6ZmxleDthbGlnbi1pdGVtczpjZW50ZXI7Z2FwOjhweDtmbGV4LXNocmluazowfQouZ3JwLWJhcntkaXNwbGF5OmZsZXg7Z2FwOjZweDtwYWRkaW5nOjlweCAxNnB4O2JhY2tncm91bmQ6dmFyKC0tY2FyZCk7Ym9yZGVyLWJvdHRvbToxcHggc29saWQgdmFyKC0tYmQpfQouZ2J7cGFkZGluZzo1cHggMTJweDtib3JkZXItcmFkaXVzOjE2cHg7Ym9yZGVyOjFweCBzb2xpZCB2YXIoLS1iZDIpO2N1cnNvcjpwb2ludGVyO2ZvbnQtc2l6ZToxMS41cHh9Ci5nYi5hY3R7YmFja2dyb3VuZDp2YXIoLS10eHQpO2NvbG9yOiNmZmY7Ym9yZGVyLWNvbG9yOnZhcigtLXR4dCl9Ci5jYXJlYXtmbGV4OjE7b3ZlcmZsb3cteTphdXRvO3BhZGRpbmc6MTRweCAxNnB4fQoudmNhcmR7Ym9ja2dyb3VuZDp2YXIoLS1jYXJkKTtib3JkZXI6MXB4IHNvbGlkIHZhcigtLWJkKTtib3JkZXItcmFkaXVzOnZhcigtLXJhZCk7cGFkZGluZzoxNHB4IDE2cHg7bWFyZ2luLWJvdHRvbToxMnB4fQp0YWJsZS52bXtib3JkZXItY29sbGFwc2U6Y29sbGFwc2U7d2lkdGg6MTAwJTtmb250LXNpemU6MTEuNXB4fQp0YWJsZS52bSB0aCx0YWJsZS52bSB0ZHtib3JkZXI6MXB4IHNvbGlkIHZhcigtLWJkMik7cGFkZGluZzo2cHggNHB4O3RleHQtYWxpZ246Y2VudGVyfQouaG17YmFja2dyb3VuZDp2YXIoLS1oZHItYmcpO2NvbG9yOnZhcigtLWhkci10KTtmb250LXdlaWdodDo2MDB9Cjwvc3R5bGU+CjxzY3JpcHQ+CihmdW5jdGlvbihnKXsKICAndXNlIHN0cmljdCc7CiAgY29uc3QgQ1JDVD0oKCk9Pntjb25zdCB0PW5ldyBVaW50MzJBcnJheSgyNTYpO2ZvcihsZXQgaT0wO2k8MjU2O2krKyl7bGV0IGM9aTtsb3IobGV0IGo9MDtqPDg7aisrKWM9Y1YxPzB4RURCODgzMjBeKGM+Pj4xKTpjPj4+MTt0W2ldPWM+Pj4wO31yZXR1cm4gdDt9KSgpOwogIGZ1bmN0aW9uIGNyYzMyKGIpe2xldCBjPTB4RkZGRkZGRkY7Zm9yKGxldCBpPTA7aTxiLmxlbmd0aDtpKyspYz0oYz4+PjgpXkNSQ1RbKGNeYltpXSkmMHhGRl07cmV0dXJuKGNeMHhGRkZGRkZGRik+Pj4wO30KICBmdW5jdGlvbiBjYXQoLi4uYSl7Y29uc3QgdD1hLnJlZHVjZShzLHgpPT5zK3gubGVuZ3RoLDApO2NvbnN0IHI9bmV3IFVpbnQ4QXJyYXkodCk7bGV0IG89MDtmb3IoY29uc3QgeCBvZiBhKXtyLnNldCh4LG8pO28rPXgubGVuZ3RoO31yZXR1cm4gcjt9CiAgY29uc3QgdTI9bj0+bmV3IFVpbnQ4QXJyYXkoW24mMHhGRiwobj4+OCkmMHhGRl0pO2NvbnN0IHU0PW49Pm5ldyBVaW50OEFycmF5KFtuJjB4RkYsKG4+PjgpJjB4RkYsKG4+PjE2KSYweEZGLChuPj4+MjQpJjB4RkJdKTsKICBjb25zdCBFTkM9bmV3IE9leHRFbmNvZGVyKCk7Y29uc3QgYnM9cz0+RU5DLmVuY29kZShTdHJpbmcocykpOwogIGNvbnN0IHhlPXM9PlN0cmluZyhzKS5yZXBsYWNlKC8mL2csJyZhbXA7JykucmVwbGFjZSgvPC9nLCcmbHQ7JykucmVwbGFjZS8+L2csJyZndDsnKTsKICBmdW5jdGlvbiBjb2xMKG4pe2xldCBzPScnLGk9bisxO3doaWxlKGk+MCl7bGV0IHI9KGktMSklMjY7cz1TdHJpbmcuZnJvbUNoYXJDb2RlKDY1K3IpK3M7aT1NYXRoLmZsb29yKChpLTEpLzI2KTt9cmV0dXJuIHM7fQogIGZ1bmN0aW9uIG1rRmlsZShuYW1lLGRhdGEpewogICAgY29uc3QgbmI9YnMobmFtZSksY3JjPWNyYzMyKGRhdGEpLHN6PWRhdGEubGVuZ3RoOwogICAgcmV0dXJuaGRyOmNhdChuZXcgVWludDhBcnJheShbMHg1MCwweDRCLDB4MDMsMHgwNF0pLHUyKDIwKSx1MigwKSx1MigwKSx1MigwKSx1MigwKSx1NChjcmMpLHU0KHN6KSx1NChzeiksdTIobmIubGVuZ3RoKSx1MigwKSxuYiksZGF0YSxuYixjcmMsc3osb2ZmOjB9OwogIH0KICBmdW5jdGlvbiBidWlsZFppcChmaWxlcyl7CiAgICBsZXQgb2ZmPTA7Zm9yKGNvbnN0IGYgb2YgZmlsZXMpe2Yub2ZmPW9mZjtvZmYrPWYuaGRyLmxlbmd0aCtmLmRhdGEubGVuZ3RoO30KICAgIGNvbnN0IGNkPWNhdCguLi5maWxlcy5tYXAoZj0+Y2F0KG5ldyBVaW50OEFycmF5KFsweDUwLDB4NEIsMHgwMSwweDAyXSksdTIoMjApLHUyKDIwKSx1MigwKSx1MigwKSx1MigwKSx1MigwKSx1NChmLmNyYyksdTQoZi5zeiksdTQoZi5zeiksdTIoZi5uYi5sZW5ndGgpLHUyKDApLHUyKDApLHUyKDApLHUyKDApLHU0KDApLHU0KGYub2ZmKSxmLm5iKSkpOwogICAgcmV0dXJuIGNhdCguLi5maWxlcy5mbGF0TWFwKGY9PltmLmhkcixmLmRhdGFdKSxjZCxuZXcgVWludDhBcnJheShbMHg1MCwweDRCLDB4MDUsMHgwNl0pLHUyKDApLHUyKDApLHUyKGZpbGVzLmxlbmd0aCksdTIoZmlsZXMubGVuZ3RoKSx1NChjZC5sZW5ndGgpLHU0KG9mZiksdTIoMCkpOwogIH0KICBmdW5jdGlvbiBnZW5lcmF0ZShzaGVldHMpewogICAgY29uc3Qgd3NYbWxzPXNoZWV0cy5tYXAoKHNoLGkpPT57CiAgICAgIGxldCByeD0nJzsoc2gucm93c3x8W10pLmZvckVhY2goKHIscmkpPT57CiAgICAgICAgaWYoIXIpcmV0dXJuO2xldCBjeD0nJztyLmZvckVhY2goKGMsY2kpPT57CiAgICAgICAgICBpZihjPT1udWxsKXJldHVybjtjb25zdCB2PXR5cGVvZiBjPT09J29iamVjdCc/Yy52OmM7Y29uc3QgcmVmPWNvbEwoY2kpKyhyaSsxKTsKICAgICAgICAgIGlmKHR5cGVvZiB2PT09J251bWJlcicpY3grPWBjIHI9IiR7cmVmfSI+PHY+JHt2fTwvdj48L2M+YDsKICAgICAgICAgIGVsc2V7Y29uc3Qgc2lkPXNpKHZfO2N4Kz1gPGMgcj0iJHtyZWZ9IiB0PSJzIj48dj4ke3NpZH08L3Y+PC9jPmA7fQogICAgICAgIH0pO2lmKGN4KXJ4Kz1gPHJvdyByPSIke3JpKzF9Ij4ke2N4fTwvcm93PmA7CiAgICAgIH0pOwogICAgICByZXR1cm4gYDw/eG1sIHZlcnNpb249IjEuMCI/Pjx3b3Jrc2hlZXQgeG1sbnM9Imh0dHA6Ly9zY2hlbWFzLm9wZW54bWxmb3JtYXRzLm9yZy9zcHJlYWRzaGVldG1sLzIwMDYvbWFpbiI+PHNoZWV0RGF0YT4ke3J4fTwvc2hlZXREYXRhPjwvd29ya3NoZWV0PmA7CiAgICB9KTsKICAgIGNvbnN0IHN0cnM9W10sc3RybT1uZXcgTWFwKCk7ZnVuY3Rpb24gc2kocyl7aWYoIXN0cm0uaGFzKHMpKXtzdHJtLnNldChzLHN0cnMubGVuZ3RoKTtzdHJzLnB1c2gocyk7fXJldHVybiBzdHJtLmdldChzKTt9CiAgICBjb25zdCBzc1g9YDw/eG1sIHZlcnNpb249IjEuMCI/Pjxzc3QgeG1sbnM9Imh0dHA6Ly9zY2hlbWFzLm9wZW54bWxmb3JtYXRzLm9yZy9zcHJlYWRzaGVldG1sLzIwMDYvbWFpbiIgY291bnQ9IiR7c3Rycy5sZW5ndGh9Ij4ke3N0cnMubWFwKHM9PmBgPHNpPjx0PiR7eGUocyl9PC90Pjwvc2k+YCl8LmpvaW4oJycpfTwvc3N0PmA7CiAgICBjb25zdCB3Ylg9YDw/eG1sIHZlcnNpb249IjEuMCI/Pjx3b3JrYm9vayB4bWxucz0iaHR0cDovL3NjaGVtYXMub3BlbnhtbGZvcm1hdHMub3JnL3NwcmVhZHNoZWV0bWwvMjAwNi9tYWluIj48c2hlZXRzPiR7c2hlZXRzLm1hcCgocyxpKT0+YDxzaGVldCBuYW1lPSIke3hlKHMubmFtZSl9IiBzaGVldElkPSIke2krMX0iIHI6aWQ9InJJZCR7aSxMXzF9Ii8+YCkuam9pbignJyl9PC9zaGVldHM+PC93b3JrYm9vaz5gOwogICAgLy8gWklQIGx5YXV0IGJ1aWxkZXIKICAgIHJldHVybiBidWlsZFppcChbbWtGaWxlKCd4bC93b3JrYm9vay54bWwnLGJzKHdiWCkpLG1rRmlxlZSgneGwvc2hhcmVkU3RyaW5ncy54bWwnLGJzKHNzWCkpLC4uLndzWG1scy5tYXAoKHgsaSk9Pm1rRmlsZShgeGwvd29ya3NoZWV0cy9zaGVldCR7aSsxfS54bWxgLGJzKHgpKSldKTsKICB9CiAgZy5YTFNYR0VOPXtnZW5lcmF0ZX07Cn0pKHdpbmRvdyk7Cjwvc2NyaXB0Pgo8L2hlYWQ+Cjxib2R5Pgo8ZGl2IGNsYXNzPSJzaWRlYmFyIj4KICA8ZGl2IGNsYXNzPSJzYi1oZWFkIj4KICAgIDxoMT7wn5OLIFZlZG1vc3Q8L2gxPgogICAgPGRpdiBjbGFzcz0ic3ViIj5BbGZyYWdhbnVzIDIwMjUtMjAyNjwvZGl2PgogIDwvZGl2PgogIDxkaXYgY2xhc3M9InNiLWZpbHRlciI+CiAgICA8ZGl2IGNsYXNzPSJmbC1sYWJlbCI+WW8nbmFsaXNoPC9kaXY+CiAgICA8ZGl2IGNsYXNzPSJmbC1idG5zIj4KICAgICAgPGJ1dHRvbiBjbGFzcz0iZmwtYnRuIGFjdCIgaWQ9ImZsU3RvbSI+U3RvbWF0b2xvZ2l5YTwvYnV0dG9uPgogICAgPC9kaXY+CiAgPC9kaXY+CjwvZGl2Pgo8ZGl2IGNsYXNzPSJtYWluIj4KICA8ZGl2IGNsYXNzPSJ0b3BiYXIiPjxkaXYgY2xhc3M9ImZhbi10aXRsZSI+MS1rdXJzIFZlZG1vc3QgaWxvdmFzaTwvZGl2PjwvZGl2PgogIDxkaXYgY2xhc3M9ImNhcmVhIj4KICAgIDxkaXYgY2xhc3M9InZjYXJkIj4KICAgICAgPHRhYmxlIGNsYXNzPSJ2bSI+CiAgICAgICAgPHRyIGNsYXNzPSJobSI+PHRoPk5vPC90aD48dGg+VGFsYWJhIEYuSS5TaDwvdGg+PHRoPkJhaG88L3RoPjwvdHI+CiAgICAgICAgPHRyPjx0ZD4xPC90ZD48dGQgc3R5bGU9InRleHQtYWxpZ246bGVmdCI+QWJkdXJhaG1vbm92IERpeW9yYmVrPC90ZD48dGQ+ODU8L3RkPjwvdHI+CiAgICAgIDwvdGFibGU+CiAgICA8L2Rpdj4KICA8L2Rpdj4KPC9kaXY+CjwvYm9keT48L2h0bWw+";
+// Sahifa yuklanganda avtomat ishga tushadi
+document.addEventListener("DOMContentLoaded", () => {
+    loadVedmostFromSheets();
+});
 
-console.log("AFU Vedomost 1-Kurs moduli muvaffaqiyatli yuklandi.");
+async function loadVedmostFromSheets() {
+    try {
+        const response = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${RANGE}?key=${API_KEY}`);
+        if (!response.ok) throw new Error("Tarmoq xatosi yoki API kalit noto'g'ri");
+        
+        const data = await response.json();
+        const rows = data.values;
+
+        if (!rows || rows.length === 0) {
+            console.warn("Jadvaldan ma'lumot topilmadi.");
+            return;
+        }
+
+        // Ma'lumotlarni HTML jadvalga render qilish
+        renderDynamicTable(rows);
+
+    } catch (error) {
+        console.error("Google Sheets'dan ma'lumot yuklashda xatolik:", error);
+    }
+}
+
+function renderDynamicTable(rows) {
+    const tableBody = document.querySelector(".vm tbody") || document.querySelector(".vm");
+    if (!tableBody) return;
+
+    // Sarlavhadan pastki qismini tozalash (eski statik ma'lumotlarni o'chirish)
+    const headerRow = tableBody.querySelector(".hm") || tableBody.rows[0];
+    tableBody.innerHTML = '';
+    if (headerRow) tableBody.appendChild(headerRow);
+
+    rows.forEach(row => {
+        // Massiv indekslari Google Sheets ustunlariga mos keladi:
+        // row[0] -> D (№), row[1] -> E (F.I.Sh), row[2] -> F (ID), row[3] -> G (Guruh)
+        // row[4] -> H (Ruxsat), row[5] -> I (JN 100), row[8] -> L (Umumiy ball), row[9] -> M (Baho)
+        
+        const no = row[0] || '';
+        const fish = row[1] || '';
+        const id = row[2] || '';
+        const guruh = row[3] || '';
+        const ruxsat = row[4] || '';
+        const jnBall = row[5] || '0';
+        const umumiylBall = row[8] || '0';
+        const baho = row[9] || '0';
+
+        // Agar satr bo'sh bo'lsa tashlab ketamiz
+        if (!fish) return;
+
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+            <td>${no}</td>
+            <td style="text-align: left; padding-left: 8px;">
+                <strong>${fish}</strong> <br>
+                <small style="color: #6B6A64;">ID: ${id} | ${guruh}</small>
+            </td>
+            <td>${jnBall}</td>
+            <td>${umumiylBall}</td>
+            <td style="font-weight: bold; color: ${baho == '0' ? '#A32D2D' : '#185FA5'}">${baho}</td>
+        `;
+        tableBody.appendChild(tr);
+    });
+
+    console.log("Vedmost Google Sheets bilan dinamik yangilandi.");
+}
